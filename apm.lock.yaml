@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-09-05T18:42:18.101253+00:00'
+generated_at: '2026-09-05T18:58:55.928050+00:00'
 apm_version: 0.29.0
 dependencies:
 - repo_url: _local/review-pr-gate
@@ -42,7 +42,7 @@ dependencies:
     .claude/hooks/review-pr-merge/scripts/parse_merge_command.py: sha256:a44f39410fb63aa6efbe0a388fc983227da46454d1c160fb16481a883d0143c2
     .claude/skills/review-pr-merge/SKILL.md: sha256:bbf2000b6d084816233ad0a549878459acfb831c9db08cbf684236d68bef80fe
     .claude/skills/review-pr-merge/references/preconditions.md: sha256:7ca47aa9194be9784ff605d3eef77f39c418fd5bbfaeedcc1b86a43ce5c5787d
-    .claude/skills/review-pr-merge/scripts/preflight.sh: sha256:4c46987c28ea20b7efcf3d042c54da0dadf5413bfe640cd19dd92b57f0324867
+    .claude/skills/review-pr-merge/scripts/preflight.sh: sha256:8afe6cc86f1b87fe0573f66371f39275932f40cbddc6590452f8f7d9cb770f42
   source: local
   local_path: ./packages/review-pr-merge
   declared_license: MIT
@@ -347,7 +347,7 @@ deployments:
   owners:
   - ./packages/review-pr-merge
   active_owner: ./packages/review-pr-merge
-  content_hash: sha256:4c46987c28ea20b7efcf3d042c54da0dadf5413bfe640cd19dd92b57f0324867
+  content_hash: sha256:8afe6cc86f1b87fe0573f66371f39275932f40cbddc6590452f8f7d9cb770f42
 - kind: project-relative
   target: claude
   value: .claude/skills/shipyard-contracts

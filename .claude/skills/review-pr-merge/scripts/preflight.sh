@@ -34,7 +34,12 @@ comments=$(gh api --paginate "repos/${REPO}/issues/${PR}/comments" \
   --jq '[.[] | select(.body | contains("shipyard:verdict")) | {id, author: .user.login, body}]' | jq -s 'add // []')
 n_verdicts=$(jq 'length' <<<"$comments")
 
+# Needed by gate 6: GitHub never accepts an approving review from the PR's own author.
+self_approval=false
+[ "$author" = "$me" ] && self_approval=true
+
 fails=()
+bypass_note=""
 add_fail() { fails+=("$1"); }
 
 # --- Gate 1: exactly one parseable verdict -----------------------------------------
@@ -96,6 +101,19 @@ elif [ "$PHASE" = "pre" ]; then
 else
   case "$mstate" in
     clean|has_hooks) : ;;
+    blocked)
+      # "blocked" normally means "needs the approving review we just gave". But when the
+      # viewer authored the PR, GitHub will never accept an approval from them, so the
+      # requirement is unsatisfiable and waiting for "clean" deadlocks forever. Accept it
+      # only when the approval is provably unobtainable AND the viewer is a repo admin who
+      # can bypass. Every other gate still applies, and GitHub remains the final authority:
+      # if no bypass is actually configured, the merge itself fails and nothing is lost.
+      if [ "$self_approval" = true ] && [ "$(gh api "repos/${REPO}" --jq '.permissions.admin' 2>/dev/null)" = "true" ]; then
+        bypass_note="gate6(post): accepted 'blocked' -- viewer authored this PR so an approving review is unobtainable, and viewer is a repo admin. Relying on ruleset bypass; GitHub will refuse the merge if none is configured."
+      else
+        add_fail "gate6(post): mergeable_state 'blocked' and no admin bypass available -- this PR needs an approving review from someone else"
+      fi
+      ;;
     *) add_fail "gate6(post): mergeable_state '${mstate}', expected clean after approval" ;;
   esac
 fi
@@ -128,8 +146,6 @@ fi
 
 # --- Report ---------------------------------------------------------------------------
 n_fail=${#fails[@]}
-self_approval=false
-[ "$author" = "$me" ] && self_approval=true
 
 if [ "$n_fail" -eq 0 ] && [ "$PHASE" = "post" ]; then
   mkdir -p .git/shipyard
@@ -142,6 +158,7 @@ jq -n \
   --arg mstate "$mstate" --argjson self_approval "$self_approval" \
   --argjson payload "$payload" \
   --argjson fails "$(printf '%s\n' "${fails[@]+"${fails[@]}"}" | jq -R . | jq -s 'map(select(. != ""))')" \
+  --arg bypass_note "$bypass_note" \
   '{repo: $repo, pr: ($pr|tonumber), phase: $phase, head_sha: $head,
     author: $author, authenticated_as: $me,
     self_approval_applies: $self_approval,
@@ -149,6 +166,7 @@ jq -n \
     verdict: ($payload.verdict // null),
     follow_ups: ($payload.follow_ups // []),
     failures: $fails,
+    note: (if $bypass_note == "" then null else $bypass_note end),
     passed: (($fails | length) == 0)}'
 
 [ "$n_fail" -eq 0 ]
