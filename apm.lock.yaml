@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-09-05T18:25:51.294377+00:00'
+generated_at: '2026-09-05T18:42:18.101253+00:00'
 apm_version: 0.29.0
 dependencies:
 - repo_url: _local/review-pr-gate
@@ -105,7 +105,7 @@ dependencies:
     .claude/agents/evidence-ladder-runner.md: sha256:c638e992edcb7f02a3feb9540f13b2839b80853cab90861dc194f16b4a34fe06
     .claude/agents/unit-test-runner.md: sha256:1309d9510ab9a248471e2307743f6f4503aeffe2ad1b2beeb6bce0101b8abb15
     .claude/skills/verify-runner/SKILL.md: sha256:09d12d4c66fa361be48b23ed6e065478e152c680ca2db3f27b6ec9aa64c87bd0
-    .claude/skills/verify-runner/references/evidence-ladder.md: sha256:59c9af49e840f9fbc4f46643425a7a70f00c187e8bdff671c73f8098ee8911cd
+    .claude/skills/verify-runner/references/evidence-ladder.md: sha256:5df14afdc93cc92a9e1122047e9bab4b08791a2bbb352f2c9d5e056d4f6a55cc
     .claude/skills/verify-runner/references/stack-detection.md: sha256:f51c7d314573b7e52864a61488f5daf94f7e1c816bea575f29d32f49f81a2749
   source: local
   local_path: ../verify-runner
@@ -410,7 +410,7 @@ deployments:
   owners:
   - local:packages/verify-runner
   active_owner: local:packages/verify-runner
-  content_hash: sha256:59c9af49e840f9fbc4f46643425a7a70f00c187e8bdff671c73f8098ee8911cd
+  content_hash: sha256:5df14afdc93cc92a9e1122047e9bab4b08791a2bbb352f2c9d5e056d4f6a55cc
 - kind: project-relative
   target: claude
   value: .claude/skills/verify-runner/references/stack-detection.md

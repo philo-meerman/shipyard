@@ -40,6 +40,12 @@ So rung 0 must also run a **full-manifest resolution**, which needs no installat
 `ResolutionImpossible` here is a `fail`, and a serious one — it means the branch cannot be
 installed by anyone.
 
+`--dry-run` needs pip 22.2 or newer, and long-lived project virtualenvs often carry a much
+older one — ChatBot_CoCP's ships pip 21.2.4. Check `pip --version` first. When it is too
+old, do **not** silently fall back to a real install; report the rung as `unavailable` with
+"pip too old for a resolution check" and let the user upgrade pip in their own environment.
+A resolution check that installs is not a check.
+
 This is not hypothetical. ChatBot_CoCP's `master` pins `langchain-openai==1.1.14`, which
 requires `openai>=2.26`, while the same file pins `openai==1.81`. A bot bumped one and not
 the other. Every single-package check passes; the manifest has no solution on **any**
