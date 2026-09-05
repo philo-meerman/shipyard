@@ -1,14 +1,7 @@
 lockfile_version: '1'
-generated_at: '2026-09-05T18:25:17.796039+00:00'
+generated_at: '2026-09-05T18:25:51.294377+00:00'
 apm_version: 0.29.0
 dependencies:
-- repo_url: _local/maintain-env-sync
-  name: maintain-env-sync
-  version: 0.2.0
-  package_type: apm_package
-  source: local
-  local_path: ./packages/maintain-env-sync
-  declared_license: MIT
 - repo_url: _local/review-pr-gate
   name: review-pr-gate
   version: 0.2.0
@@ -52,20 +45,6 @@ dependencies:
     .claude/skills/review-pr-merge/scripts/preflight.sh: sha256:4c46987c28ea20b7efcf3d042c54da0dadf5413bfe640cd19dd92b57f0324867
   source: local
   local_path: ./packages/review-pr-merge
-  declared_license: MIT
-- repo_url: _local/shipyard-contracts
-  name: shipyard-contracts
-  version: 0.2.0
-  package_type: apm_package
-  source: local
-  local_path: ./packages/shipyard-contracts
-  declared_license: MIT
-- repo_url: _local/verify-runner
-  name: verify-runner
-  version: 0.2.0
-  package_type: apm_package
-  source: local
-  local_path: ./packages/verify-runner
   declared_license: MIT
 - repo_url: _local/maintain-env-sync
   name: maintain-env-sync

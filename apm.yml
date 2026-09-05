@@ -11,11 +11,11 @@ targets:
 # Local-path dependencies on every package in this repo, so `apm install` here deploys the
 # whole set into this checkout for iteration. Consumers install individual packages (or the
 # pr-flow bundle) by their virtual subdirectory path -- see README.
+# Only the user-facing entry points are declared. shipyard-contracts, verify-runner and
+# maintain-env-sync arrive transitively through them; declaring them again is a redundant
+# edge, and APM flags the resulting double-deploy as "skill replaced -- remove one".
 dependencies:
   apm:
-    - ./packages/shipyard-contracts
-    - ./packages/verify-runner
-    - ./packages/maintain-env-sync
     - ./packages/review-pr-gate
     - ./packages/review-pr-merge
   mcp: []
