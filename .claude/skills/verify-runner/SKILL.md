@@ -30,6 +30,7 @@ fall back to `references/stack-detection.md` and say in the result that detectio
 used, so the caller can tell inference from configuration.
 
 ```yaml
+requires_python: ">=3.9,<3.10"    # what this project's interpreter must satisfy
 runtime:
   python: ./venv/bin/python
   env_file: .env
@@ -59,6 +60,9 @@ and the main checkout supplies the *runtime*:
 2. Use `runtime.python` **resolved against the main checkout**, not the worktree.
 3. Pass `runtime.env_file` from the main checkout to the process environment.
 4. Symlink each `runtime.link` entry from the main checkout into the worktree root.
+5. Install changed dependencies into a throwaway **overlay** directory on `PYTHONPATH` —
+   never into the inherited environment. Installing an unmerged dependency into the user's
+   venv leaves their machine altered by a change that may never land.
 
 Always remove the worktree afterwards (`git worktree remove --force`), including when a
 rung fails or you abort. Verify with `git worktree list` before returning.

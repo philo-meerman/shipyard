@@ -1,6 +1,6 @@
 ---
 description: Review a pull request and post a verdict comment saying whether it is safe to merge.
-argument-hint: <pr-number> [--dry-run]
+argument-hint: "<pr-number> [--dry-run]"
 ---
 
 Review pull request $ARGUMENTS in this repository.

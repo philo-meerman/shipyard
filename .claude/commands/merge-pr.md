@@ -18,6 +18,11 @@ Use the `review-pr-merge` skill and follow it exactly. In brief:
    state and writes the pass marker the merge-guard hook checks for.
 5. Merge with the configured method, then report what merged, at which SHA, whether
    approval was given or skipped, and any `follow_ups` from the verdict payload.
+6. Unless `post_merge.sync_local: false`, run the `maintain-env-sync` skill so the local
+   checkout and its installed dependencies match the default branch again.
+
+Issue `gh pr review --approve` and `gh pr merge` as single unchained commands. A compound
+line matches no permission allowlist prefix and gets refused as a whole.
 
 If `--dry-run` appears in the arguments, run phase `pre` only, report the gate-by-gate
 result, and stop without approving or merging.

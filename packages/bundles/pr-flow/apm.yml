@@ -1,5 +1,5 @@
 name: pr-flow
-version: 0.1.0
+version: 0.2.0
 description: The whole shipyard pull-request flow in one install — review gate plus merge gate, with contracts and the verify runner arriving transitively.
 author: philo-meerman
 license: MIT

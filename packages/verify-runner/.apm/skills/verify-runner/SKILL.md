@@ -30,6 +30,7 @@ fall back to `references/stack-detection.md` and say in the result that detectio
 used, so the caller can tell inference from configuration.
 
 ```yaml
+requires_python: ">=3.9,<3.10"    # what this project's interpreter must satisfy
 runtime:
   python: ./venv/bin/python
   env_file: .env

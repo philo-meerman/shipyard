@@ -25,8 +25,71 @@ Each rung returns `pass` | `fail` | `skip` | `unavailable`. Rung 3 may also retu
 satisfies its own pin but conflicts with a sibling. That is the most common way a
 dependency bump breaks a project, and installs alone do not surface it.
 
+### Resolve the whole manifest, not just the changed package
+
+Installing one package proves that package is installable. It says nothing about whether
+the manifest as a whole still has a solution, and that is where dependency bumps actually
+break.
+
+So rung 0 must also run a **full-manifest resolution**, which needs no installation:
+
+```bash
+<py> -m pip install --dry-run -r requirements.txt
+```
+
+`ResolutionImpossible` here is a `fail`, and a serious one — it means the branch cannot be
+installed by anyone.
+
+`--dry-run` needs pip 22.2 or newer, and long-lived project virtualenvs often carry a much
+older one — ChatBot_CoCP's ships pip 21.2.4. Check `pip --version` first. When it is too
+old, do **not** silently fall back to a real install; report the rung as `unavailable` with
+"pip too old for a resolution check" and let the user upgrade pip in their own environment.
+A resolution check that installs is not a check.
+
+This is not hypothetical. ChatBot_CoCP's `master` pins `langchain-openai==1.1.14`, which
+requires `openai>=2.26`, while the same file pins `openai==1.81`. A bot bumped one and not
+the other. Every single-package check passes; the manifest has no solution on **any**
+Python version. A per-package rung 0 would have waved it through, and did.
+
+### Check the interpreter against `requires_python`
+
+When `.shipyard.yml` declares `requires_python`, assert the project's interpreter satisfies
+it, and report a manifest pin whose own `Requires-Python` excludes that interpreter:
+
+```bash
+<py> -c 'import sys; print("%d.%d" % sys.version_info[:2])'
+```
+
+A pin that needs a newer Python than the project runs on is a `fail` with a specific
+message — name the pin and both versions. "Could not find a version that satisfies the
+requirement" is what pip says, and it sends people hunting for a network problem.
+
 `fail` when the install errors or `pip check` reports a conflict. `unavailable` when there
 is no usable interpreter or package manager.
+
+### Never install into the user's environment
+
+The runtime is *inherited*, which means the interpreter you are handed is the one the user
+develops against. Installing the PR's requirements into it would leave their machine
+running an unmerged dependency — and if the merge is later declined, silently so.
+
+Install into an **overlay** instead, and put it ahead of the inherited environment:
+
+```bash
+pip install --target "$OVERLAY" --upgrade <package>==<new-version>
+PYTHONPATH="$OVERLAY:${PYTHONPATH:-}" <py> -c 'import <mod>; print(<mod>.__version__)'
+```
+
+For a dependency bump, install **only the changed packages** at their new versions. The
+rest of the environment is already correct in the inherited venv, and reinstalling it
+turns a ten-second rung into a multi-minute one for no signal.
+
+Always assert the overlay actually won: import the package and print its version before
+trusting rungs 1–3. A shadowing failure makes every later rung a test of the *old* version
+while reporting on the new one, which is worse than not running them.
+
+Delete the overlay afterwards. Verify the inherited environment is untouched — for pip,
+`<py> -m pip show <package>` should still report the *old* version when you are done.
 
 ## Rung 1 — Imports
 
@@ -77,10 +140,15 @@ index, embeds a corpus, or calls a model, that is a configuration problem — re
 
 This is a **differential** rung: the same probe, run twice, against two versions.
 
-1. Run `boundary_probe` in the worktree at the PR head; capture stdout.
-2. Run the same probe with the **base** ref's dependency set — a second worktree at the
-   merge base, its own rung-0 install.
+1. Run `boundary_probe` with the overlay active — the new version.
+2. Run the same probe with the overlay removed — the inherited environment still holds the
+   base version, so no second install is needed.
 3. Diff the two outputs.
+
+Running base second, from the untouched environment, is also the cheapest available proof
+that the overlay was real: if the two runs are byte-identical *and* the version assertion
+showed different versions, the probe does not reach the changed code and rung 3 is `skip`,
+not `pass`.
 
 - Identical → `pass`.
 - Differ → `diff`. Report a unified-diff excerpt and the byte delta. **This is not a
@@ -95,6 +163,28 @@ the network or an LLM is not a probe; it is a flake generator.
 ## Unit — the repository's own suite
 
 Run `test_command`, or the detected equivalent. Report exit code and a short summary.
+
+### Always baseline against the merge base
+
+A red suite does not mean this change broke it. Repositories carry pre-existing failures —
+a stale assertion, a test nobody has run in a year — and blocking a good pull request over
+one of them is how a gate loses the user's trust in a single afternoon.
+
+So run the suite **twice**: once at the head, once at the merge base, and compare the sets
+of failing test IDs.
+
+| Base | Head | Result |
+|---|---|---|
+| passes | passes | `pass` |
+| fails | fails (same IDs) | `pass`, with `pre_existing_failures` listed |
+| passes | fails | `fail` — this change broke them; name the new IDs |
+| fails | passes | `pass`, and note the change fixed something |
+
+Only a **newly** failing test is a `fail`. Report pre-existing failures in the detail so
+they are visible without being blocking — they are a real problem, just not this pull
+request's problem.
+
+Skip the baseline run only when the head run is fully green; there is nothing to explain.
 
 Then judge **relevance** separately: does this suite exercise the changed boundary without
 mocking it? Read the tests that touch the affected modules and look for `patch`, `mock`,

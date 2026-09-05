@@ -52,6 +52,20 @@ A PR awaiting its first approval reports `mergeable_state: "blocked"`. That stat
 Checking `blocked` before approving and aborting on it kills exactly the PRs this gate
 exists to land. Do not collapse the two phases.
 
+## Run the mutating commands bare, one at a time
+
+`gh pr review --approve` and `gh pr merge` must each be issued as a **single, unchained
+command** — no `&&`, no pipes, no `echo` alongside them, no wrapping in a loop.
+
+Permission layers match allowlist rules against a command prefix. A compound line that
+bundles the merge with other statements does not match `Bash(gh pr merge:*)`, falls through
+to a classifier that judges the line as a whole, and gets refused — even in a repository
+where the rule is already granted. The refusal looks like a capability problem and is
+really a command-shape problem.
+
+Same reason you should not pipe them through `tail` to trim the output. Run the command,
+read what it prints, then run the next one.
+
 ## Approving
 
 `gh pr review --approve` — **unless the PR author is the authenticated user**. GitHub
@@ -68,6 +82,26 @@ After merging, report: what was merged, at which SHA, whether approval was given
 and **any `follow_ups` from the verdict payload**. Follow-ups are things the merge does not
 do — regenerating a derived artefact, updating a lockfile elsewhere. Surfacing them at merge
 time is the last moment anyone will look.
+
+## Sync the local environment
+
+A merge leaves the local checkout behind the default branch, and if the pull request touched
+a dependency manifest, the installed packages now disagree with what the repository pins.
+That drift is silent: the next test run, debugging session and review all happen against
+something the repository no longer describes.
+
+So unless `.shipyard.yml` sets `post_merge.sync_local: false`, invoke the `maintain-env-sync`
+skill once the merge lands.
+
+Note the inversion this represents, and do not fight it. Before the merge, installing the
+pull request's dependency into the real environment is forbidden — the change is speculative
+and may never land, so the review gate uses an overlay. After the merge the default branch
+pins it, and an environment holding the old version is simply wrong. Same operation, opposite
+correct answer, decided by which side of the merge you are on.
+
+The sync refuses rather than surprises: it will not pull over uncommitted tracked changes,
+will not switch the user off a feature branch, and will not create a merge commit to make
+itself succeed. Relay any refusal as-is; it is doing its job.
 
 ## When a gate fails
 
