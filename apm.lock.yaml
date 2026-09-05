@@ -1,5 +1,5 @@
 lockfile_version: '1'
-generated_at: '2026-09-05T18:15:14.896459+00:00'
+generated_at: '2026-09-05T18:25:17.796039+00:00'
 apm_version: 0.29.0
 dependencies:
 - repo_url: _local/maintain-env-sync
@@ -81,9 +81,9 @@ dependencies:
   - .claude/skills/maintain-env-sync/scripts/sync-env.sh
   deployed_file_hashes:
     .claude/commands/sync-env.md: sha256:adafd8d6ab2a5f371b78bb95bc4f0e6fd48752fb2da1b6f9dc55ffe1ccf64809
-    .claude/skills/maintain-env-sync/SKILL.md: sha256:0d44a785a24c2e74d8c74115680c9422015da63a32ed53b07eb23969b1635fb4
+    .claude/skills/maintain-env-sync/SKILL.md: sha256:e70e9f722bc88d07a940602e6de4555c0dcbd4932956ce64ea46fb176a25ed26
     .claude/skills/maintain-env-sync/references/sync-strategies.md: sha256:850fba22c1db6c64e6928590e606c658e957809b2f6782a9adde7e25ef900c3c
-    .claude/skills/maintain-env-sync/scripts/sync-env.sh: sha256:2673455771199139793d99083eb86bc9ab931db10ae046fb9609b59c20e3b763
+    .claude/skills/maintain-env-sync/scripts/sync-env.sh: sha256:61ceae7a389f3e505aa18eeb14e8655c0d28d35cb8018950ab3e9dc88597d74b
   source: local
   local_path: ../maintain-env-sync
   declaring_parent: ./packages/review-pr-merge
@@ -125,8 +125,8 @@ dependencies:
   deployed_file_hashes:
     .claude/agents/evidence-ladder-runner.md: sha256:c638e992edcb7f02a3feb9540f13b2839b80853cab90861dc194f16b4a34fe06
     .claude/agents/unit-test-runner.md: sha256:1309d9510ab9a248471e2307743f6f4503aeffe2ad1b2beeb6bce0101b8abb15
-    .claude/skills/verify-runner/SKILL.md: sha256:d6140d5ded17a4802aa66770edb41841906bf3b3205416f4afbc7b11916d64fb
-    .claude/skills/verify-runner/references/evidence-ladder.md: sha256:21c1836b6fd494417e94bcc9263c4e45051a1c5d13fa21336dbb402ee91db50b
+    .claude/skills/verify-runner/SKILL.md: sha256:09d12d4c66fa361be48b23ed6e065478e152c680ca2db3f27b6ec9aa64c87bd0
+    .claude/skills/verify-runner/references/evidence-ladder.md: sha256:59c9af49e840f9fbc4f46643425a7a70f00c187e8bdff671c73f8098ee8911cd
     .claude/skills/verify-runner/references/stack-detection.md: sha256:f51c7d314573b7e52864a61488f5daf94f7e1c816bea575f29d32f49f81a2749
   source: local
   local_path: ../verify-runner
@@ -269,7 +269,7 @@ deployments:
   owners:
   - local:packages/maintain-env-sync
   active_owner: local:packages/maintain-env-sync
-  content_hash: sha256:0d44a785a24c2e74d8c74115680c9422015da63a32ed53b07eb23969b1635fb4
+  content_hash: sha256:e70e9f722bc88d07a940602e6de4555c0dcbd4932956ce64ea46fb176a25ed26
 - kind: project-relative
   target: claude
   value: .claude/skills/maintain-env-sync/references/sync-strategies.md
@@ -287,7 +287,7 @@ deployments:
   owners:
   - local:packages/maintain-env-sync
   active_owner: local:packages/maintain-env-sync
-  content_hash: sha256:2673455771199139793d99083eb86bc9ab931db10ae046fb9609b59c20e3b763
+  content_hash: sha256:61ceae7a389f3e505aa18eeb14e8655c0d28d35cb8018950ab3e9dc88597d74b
 - kind: project-relative
   target: claude
   value: .claude/skills/review-pr-gate
@@ -422,7 +422,7 @@ deployments:
   owners:
   - local:packages/verify-runner
   active_owner: local:packages/verify-runner
-  content_hash: sha256:d6140d5ded17a4802aa66770edb41841906bf3b3205416f4afbc7b11916d64fb
+  content_hash: sha256:09d12d4c66fa361be48b23ed6e065478e152c680ca2db3f27b6ec9aa64c87bd0
 - kind: project-relative
   target: claude
   value: .claude/skills/verify-runner/references/evidence-ladder.md
@@ -431,7 +431,7 @@ deployments:
   owners:
   - local:packages/verify-runner
   active_owner: local:packages/verify-runner
-  content_hash: sha256:21c1836b6fd494417e94bcc9263c4e45051a1c5d13fa21336dbb402ee91db50b
+  content_hash: sha256:59c9af49e840f9fbc4f46643425a7a70f00c187e8bdff671c73f8098ee8911cd
 - kind: project-relative
   target: claude
   value: .claude/skills/verify-runner/references/stack-detection.md

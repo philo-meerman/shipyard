@@ -64,7 +64,7 @@ changed library away is green and proves nothing. So `verify-runner` climbs four
 
 | Rung | Question |
 |---|---|
-| 0 · Resolves | Do the dependencies install and stay mutually consistent? |
+| 0 · Resolves | Does the **whole manifest** still have a solution, on this project's Python? |
 | 1 · Imports | Does it compile? |
 | 2 · Smoke | Does the app boot and serve? |
 | 3 · Boundary | Run a probe on base *and* head, and diff. Did behaviour change? |
@@ -118,6 +118,8 @@ you off a feature branch, no merge commit invented to make a sync succeed.
 Optional `.shipyard.yml` in the consuming repository:
 
 ```yaml
+requires_python: ">=3.9,<3.10"    # rung 0 fails a pin that excludes this interpreter
+
 auto_merge: true
 merge_method: squash
 delete_branch: true

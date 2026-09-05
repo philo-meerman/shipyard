@@ -25,6 +25,39 @@ Each rung returns `pass` | `fail` | `skip` | `unavailable`. Rung 3 may also retu
 satisfies its own pin but conflicts with a sibling. That is the most common way a
 dependency bump breaks a project, and installs alone do not surface it.
 
+### Resolve the whole manifest, not just the changed package
+
+Installing one package proves that package is installable. It says nothing about whether
+the manifest as a whole still has a solution, and that is where dependency bumps actually
+break.
+
+So rung 0 must also run a **full-manifest resolution**, which needs no installation:
+
+```bash
+<py> -m pip install --dry-run -r requirements.txt
+```
+
+`ResolutionImpossible` here is a `fail`, and a serious one — it means the branch cannot be
+installed by anyone.
+
+This is not hypothetical. ChatBot_CoCP's `master` pins `langchain-openai==1.1.14`, which
+requires `openai>=2.26`, while the same file pins `openai==1.81`. A bot bumped one and not
+the other. Every single-package check passes; the manifest has no solution on **any**
+Python version. A per-package rung 0 would have waved it through, and did.
+
+### Check the interpreter against `requires_python`
+
+When `.shipyard.yml` declares `requires_python`, assert the project's interpreter satisfies
+it, and report a manifest pin whose own `Requires-Python` excludes that interpreter:
+
+```bash
+<py> -c 'import sys; print("%d.%d" % sys.version_info[:2])'
+```
+
+A pin that needs a newer Python than the project runs on is a `fail` with a specific
+message — name the pin and both versions. "Could not find a version that satisfies the
+requirement" is what pip says, and it sends people hunting for a network problem.
+
 `fail` when the install errors or `pip check` reports a conflict. `unavailable` when there
 is no usable interpreter or package manager.
 
