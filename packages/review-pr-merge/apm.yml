@@ -1,0 +1,15 @@
+name: review-pr-merge
+version: 0.1.0
+description: Re-verify a shipyard verdict against live GitHub state, then approve and merge the pull request. Ships a PreToolUse hook that blocks ungated merges.
+author: philo-meerman
+license: MIT
+repository: https://github.com/philo-meerman/shipyard
+keywords: [sdlc, merge, pull-request, github]
+targets:
+  - claude
+includes: auto
+dependencies:
+  apm:
+    - ../shipyard-contracts
+  mcp: []
+scripts: {}

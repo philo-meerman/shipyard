@@ -1,0 +1,369 @@
+lockfile_version: '1'
+generated_at: '2026-09-05T17:23:02.103380+00:00'
+apm_version: 0.29.0
+dependencies:
+- repo_url: _local/review-pr-gate
+  name: review-pr-gate
+  version: 0.1.0
+  package_type: apm_package
+  deployed_files:
+  - .claude/agents/pr-risk-reviewer.md
+  - .claude/commands/review-pr.md
+  - .claude/skills/review-pr-gate
+  - .claude/skills/review-pr-gate/SKILL.md
+  - .claude/skills/review-pr-gate/references/lanes.md
+  - .claude/skills/review-pr-gate/references/verdict-rules.md
+  - .claude/skills/review-pr-gate/scripts/pr-context.sh
+  deployed_file_hashes:
+    .claude/agents/pr-risk-reviewer.md: sha256:a98ecf7ceba5e99e8e41bc201e864eb984fbc3651e2d49d829691d4dac58ae14
+    .claude/commands/review-pr.md: sha256:c42f1ec2854762fdc97aac96828611e6ad2d0b94eae8aa6dbe3d80443a3646ab
+    .claude/skills/review-pr-gate/SKILL.md: sha256:f705e0aa81f782b4c7a14c3d57f2accae7dfc56e7c5d8c33e2a84359ec66e86e
+    .claude/skills/review-pr-gate/references/lanes.md: sha256:8e47077787ecb78e1426916bbc0f66401ee182f9e4f28631265251a6de9f110d
+    .claude/skills/review-pr-gate/references/verdict-rules.md: sha256:c51d1bebaa3f743a62d784bccfe2e430865e8b00ed2662f895aecfdafbd61ae7
+    .claude/skills/review-pr-gate/scripts/pr-context.sh: sha256:a5e258137e115d4332d0deb4ebfa734a2108d6a61520c71f2ac704d217f0a515
+  source: local
+  local_path: ./packages/review-pr-gate
+  declared_license: MIT
+- repo_url: _local/review-pr-merge
+  name: review-pr-merge
+  version: 0.1.0
+  package_type: apm_package
+  deployed_files:
+  - .claude/commands/merge-pr.md
+  - .claude/hooks/review-pr-merge/scripts/merge-guard.sh
+  - .claude/hooks/review-pr-merge/scripts/parse-merge-command.py
+  - .claude/skills/review-pr-merge
+  - .claude/skills/review-pr-merge/SKILL.md
+  - .claude/skills/review-pr-merge/references/preconditions.md
+  - .claude/skills/review-pr-merge/scripts/preflight.sh
+  deployed_file_hashes:
+    .claude/commands/merge-pr.md: sha256:eaa1dc527ed46253852bc1dd6e006d61a25d990d34981c51d70dc50070901f68
+    .claude/hooks/review-pr-merge/scripts/merge-guard.sh: sha256:dc3c800666a423e34907435f3ff2356d785caebc731d76fbfd98db8e404f6855
+    .claude/hooks/review-pr-merge/scripts/parse-merge-command.py: sha256:f4628535556dea96db9b5ca8aaf24ed256ee9fb3a8bdd8d6baacd77ec8b0a423
+    .claude/skills/review-pr-merge/SKILL.md: sha256:01084861350a7dda4a354cb2a2553a3a5df0ca0d94939082c86933a8bc6d27ac
+    .claude/skills/review-pr-merge/references/preconditions.md: sha256:7ca47aa9194be9784ff605d3eef77f39c418fd5bbfaeedcc1b86a43ce5c5787d
+    .claude/skills/review-pr-merge/scripts/preflight.sh: sha256:67b5602d68b9b46e9f9bc8197b3ed2969e8bd397a79e72fa4d57ffc1dd644c2c
+  source: local
+  local_path: ./packages/review-pr-merge
+  declared_license: MIT
+- repo_url: _local/shipyard-contracts
+  name: shipyard-contracts
+  version: 0.1.0
+  package_type: apm_package
+  source: local
+  local_path: ./packages/shipyard-contracts
+  declared_license: MIT
+- repo_url: _local/verify-runner
+  name: verify-runner
+  version: 0.1.0
+  package_type: apm_package
+  source: local
+  local_path: ./packages/verify-runner
+  declared_license: MIT
+- repo_url: _local/shipyard-contracts
+  name: shipyard-contracts
+  version: 0.1.0
+  depth: 2
+  resolved_by: _local/review-pr-gate
+  package_type: apm_package
+  deployed_files:
+  - .claude/skills/shipyard-contracts
+  - .claude/skills/shipyard-contracts/SKILL.md
+  - .claude/skills/shipyard-contracts/assets/verdict-comment-template.md
+  - .claude/skills/shipyard-contracts/references/verdict-schema-v1.md
+  deployed_file_hashes:
+    .claude/skills/shipyard-contracts/SKILL.md: sha256:adbe21c5b6bf71f49beace264d588ee88da36ff6e14f2d455db8434590fc6d5c
+    .claude/skills/shipyard-contracts/assets/verdict-comment-template.md: sha256:8683148da479cb1c921db9eaa55e6c943443116c7beadc7c85339775a5e8d4f2
+    .claude/skills/shipyard-contracts/references/verdict-schema-v1.md: sha256:c4848e737ce9d9a835ffe31ae89ee3b189bbdae634a8f5f417c63dc1575ef9e2
+  source: local
+  local_path: ../shipyard-contracts
+  declaring_parent: ./packages/review-pr-gate
+  anchored_local_path: packages/shipyard-contracts
+  declared_license: MIT
+- repo_url: _local/verify-runner
+  name: verify-runner
+  version: 0.1.0
+  depth: 2
+  resolved_by: _local/review-pr-gate
+  package_type: apm_package
+  deployed_files:
+  - .claude/agents/evidence-ladder-runner.md
+  - .claude/agents/unit-test-runner.md
+  - .claude/skills/verify-runner
+  - .claude/skills/verify-runner/SKILL.md
+  - .claude/skills/verify-runner/references/evidence-ladder.md
+  - .claude/skills/verify-runner/references/stack-detection.md
+  deployed_file_hashes:
+    .claude/agents/evidence-ladder-runner.md: sha256:c638e992edcb7f02a3feb9540f13b2839b80853cab90861dc194f16b4a34fe06
+    .claude/agents/unit-test-runner.md: sha256:d53cb4f5b661c7843e47861e803ce5dc22648b117224041a3a8e645ec9761371
+    .claude/skills/verify-runner/SKILL.md: sha256:b1836e97c10ef416ed268ff734908d4ad3ccb889ef64a63dbc170dcc780a87ac
+    .claude/skills/verify-runner/references/evidence-ladder.md: sha256:a06d959063678f349f11a3bec00c0c32506823e8db7da8a0851d6764a448f355
+    .claude/skills/verify-runner/references/stack-detection.md: sha256:f51c7d314573b7e52864a61488f5daf94f7e1c816bea575f29d32f49f81a2749
+  source: local
+  local_path: ../verify-runner
+  declaring_parent: ./packages/review-pr-gate
+  anchored_local_path: packages/verify-runner
+  declared_license: MIT
+- repo_url: mattpocock/skills
+  name: code-review
+  host: github.com
+  resolved_commit: 6acc160e4e0cd062dbbbd7a1b26ae92855edf07e
+  resolved_ref: v1.2.3
+  version: unknown
+  virtual_path: skills/engineering/code-review
+  is_virtual: true
+  depth: 2
+  resolved_by: _local/review-pr-gate
+  package_type: claude_skill
+  deployed_files:
+  - .claude/skills/code-review
+  - .claude/skills/code-review/SKILL.md
+  - .claude/skills/code-review/agents/openai.yaml
+  deployed_file_hashes:
+    .claude/skills/code-review/SKILL.md: sha256:9cf46653dd9c710ea1e6c22423caf31a794c88773bc94bdaa23140277f470442
+    .claude/skills/code-review/agents/openai.yaml: sha256:8229ca854e11dc8e6aef2131ee03f31fb1561cf905fab9ccc325180cf3331352
+  content_hash: sha256:c5e79e535abbb3e6da33bc44f870a558a3abc5152c678a64501b1130b5488fd5
+deployments:
+- kind: project-relative
+  target: claude
+  value: .claude/agents/evidence-ladder-runner.md
+  runtime: null
+  scope: project
+  owners:
+  - local:packages/verify-runner
+  active_owner: local:packages/verify-runner
+  content_hash: sha256:c638e992edcb7f02a3feb9540f13b2839b80853cab90861dc194f16b4a34fe06
+- kind: project-relative
+  target: claude
+  value: .claude/agents/pr-risk-reviewer.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-gate
+  active_owner: ./packages/review-pr-gate
+  content_hash: sha256:a98ecf7ceba5e99e8e41bc201e864eb984fbc3651e2d49d829691d4dac58ae14
+- kind: project-relative
+  target: claude
+  value: .claude/agents/unit-test-runner.md
+  runtime: null
+  scope: project
+  owners:
+  - local:packages/verify-runner
+  active_owner: local:packages/verify-runner
+  content_hash: sha256:d53cb4f5b661c7843e47861e803ce5dc22648b117224041a3a8e645ec9761371
+- kind: project-relative
+  target: claude
+  value: .claude/commands/merge-pr.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-merge
+  active_owner: ./packages/review-pr-merge
+  content_hash: sha256:eaa1dc527ed46253852bc1dd6e006d61a25d990d34981c51d70dc50070901f68
+- kind: project-relative
+  target: claude
+  value: .claude/commands/review-pr.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-gate
+  active_owner: ./packages/review-pr-gate
+  content_hash: sha256:c42f1ec2854762fdc97aac96828611e6ad2d0b94eae8aa6dbe3d80443a3646ab
+- kind: project-relative
+  target: claude
+  value: .claude/hooks/review-pr-merge/scripts/merge-guard.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-merge
+  active_owner: ./packages/review-pr-merge
+  content_hash: sha256:dc3c800666a423e34907435f3ff2356d785caebc731d76fbfd98db8e404f6855
+- kind: project-relative
+  target: claude
+  value: .claude/hooks/review-pr-merge/scripts/parse-merge-command.py
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-merge
+  active_owner: ./packages/review-pr-merge
+  content_hash: sha256:f4628535556dea96db9b5ca8aaf24ed256ee9fb3a8bdd8d6baacd77ec8b0a423
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-review
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills/skills/engineering/code-review
+  active_owner: mattpocock/skills/skills/engineering/code-review
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-review/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills/skills/engineering/code-review
+  active_owner: mattpocock/skills/skills/engineering/code-review
+  content_hash: sha256:9cf46653dd9c710ea1e6c22423caf31a794c88773bc94bdaa23140277f470442
+- kind: project-relative
+  target: claude
+  value: .claude/skills/code-review/agents/openai.yaml
+  runtime: null
+  scope: project
+  owners:
+  - mattpocock/skills/skills/engineering/code-review
+  active_owner: mattpocock/skills/skills/engineering/code-review
+  content_hash: sha256:8229ca854e11dc8e6aef2131ee03f31fb1561cf905fab9ccc325180cf3331352
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-pr-gate
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-gate
+  active_owner: ./packages/review-pr-gate
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-pr-gate/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-gate
+  active_owner: ./packages/review-pr-gate
+  content_hash: sha256:f705e0aa81f782b4c7a14c3d57f2accae7dfc56e7c5d8c33e2a84359ec66e86e
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-pr-gate/references/lanes.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-gate
+  active_owner: ./packages/review-pr-gate
+  content_hash: sha256:8e47077787ecb78e1426916bbc0f66401ee182f9e4f28631265251a6de9f110d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-pr-gate/references/verdict-rules.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-gate
+  active_owner: ./packages/review-pr-gate
+  content_hash: sha256:c51d1bebaa3f743a62d784bccfe2e430865e8b00ed2662f895aecfdafbd61ae7
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-pr-gate/scripts/pr-context.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-gate
+  active_owner: ./packages/review-pr-gate
+  content_hash: sha256:a5e258137e115d4332d0deb4ebfa734a2108d6a61520c71f2ac704d217f0a515
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-pr-merge
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-merge
+  active_owner: ./packages/review-pr-merge
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-pr-merge/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-merge
+  active_owner: ./packages/review-pr-merge
+  content_hash: sha256:01084861350a7dda4a354cb2a2553a3a5df0ca0d94939082c86933a8bc6d27ac
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-pr-merge/references/preconditions.md
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-merge
+  active_owner: ./packages/review-pr-merge
+  content_hash: sha256:7ca47aa9194be9784ff605d3eef77f39c418fd5bbfaeedcc1b86a43ce5c5787d
+- kind: project-relative
+  target: claude
+  value: .claude/skills/review-pr-merge/scripts/preflight.sh
+  runtime: null
+  scope: project
+  owners:
+  - ./packages/review-pr-merge
+  active_owner: ./packages/review-pr-merge
+  content_hash: sha256:67b5602d68b9b46e9f9bc8197b3ed2969e8bd397a79e72fa4d57ffc1dd644c2c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/shipyard-contracts
+  runtime: null
+  scope: project
+  owners:
+  - local:packages/shipyard-contracts
+  active_owner: local:packages/shipyard-contracts
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/shipyard-contracts/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - local:packages/shipyard-contracts
+  active_owner: local:packages/shipyard-contracts
+  content_hash: sha256:adbe21c5b6bf71f49beace264d588ee88da36ff6e14f2d455db8434590fc6d5c
+- kind: project-relative
+  target: claude
+  value: .claude/skills/shipyard-contracts/assets/verdict-comment-template.md
+  runtime: null
+  scope: project
+  owners:
+  - local:packages/shipyard-contracts
+  active_owner: local:packages/shipyard-contracts
+  content_hash: sha256:8683148da479cb1c921db9eaa55e6c943443116c7beadc7c85339775a5e8d4f2
+- kind: project-relative
+  target: claude
+  value: .claude/skills/shipyard-contracts/references/verdict-schema-v1.md
+  runtime: null
+  scope: project
+  owners:
+  - local:packages/shipyard-contracts
+  active_owner: local:packages/shipyard-contracts
+  content_hash: sha256:c4848e737ce9d9a835ffe31ae89ee3b189bbdae634a8f5f417c63dc1575ef9e2
+- kind: project-relative
+  target: claude
+  value: .claude/skills/verify-runner
+  runtime: null
+  scope: project
+  owners:
+  - local:packages/verify-runner
+  active_owner: local:packages/verify-runner
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/verify-runner/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - local:packages/verify-runner
+  active_owner: local:packages/verify-runner
+  content_hash: sha256:b1836e97c10ef416ed268ff734908d4ad3ccb889ef64a63dbc170dcc780a87ac
+- kind: project-relative
+  target: claude
+  value: .claude/skills/verify-runner/references/evidence-ladder.md
+  runtime: null
+  scope: project
+  owners:
+  - local:packages/verify-runner
+  active_owner: local:packages/verify-runner
+  content_hash: sha256:a06d959063678f349f11a3bec00c0c32506823e8db7da8a0851d6764a448f355
+- kind: project-relative
+  target: claude
+  value: .claude/skills/verify-runner/references/stack-detection.md
+  runtime: null
+  scope: project
+  owners:
+  - local:packages/verify-runner
+  active_owner: local:packages/verify-runner
+  content_hash: sha256:f51c7d314573b7e52864a61488f5daf94f7e1c816bea575f29d32f49f81a2749

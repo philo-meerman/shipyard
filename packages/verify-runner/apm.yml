@@ -1,0 +1,14 @@
+name: verify-runner
+version: 0.1.0
+description: Evidence ladder for a change — dependency resolution, import/compile, app smoke boot, boundary behaviour diff — plus the repository's own test suite.
+author: philo-meerman
+license: MIT
+repository: https://github.com/philo-meerman/shipyard
+keywords: [sdlc, test, smoke-test, verification]
+targets:
+  - claude
+includes: auto
+dependencies:
+  apm: []
+  mcp: []
+scripts: {}

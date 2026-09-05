@@ -1,0 +1,21 @@
+name: shipyard
+version: 0.1.0
+description: SDLC agent packages for Claude Code, distributed with APM. Ships a PR review gate and a merge gate; structured to grow across intake, refine, design, build, review, test, deploy and maintain.
+author: philo-meerman
+license: MIT
+repository: https://github.com/philo-meerman/shipyard
+keywords: [sdlc, agents, skills, pull-request, apm]
+targets:
+  - claude
+
+# Local-path dependencies on every package in this repo, so `apm install` here deploys the
+# whole set into this checkout for iteration. Consumers install individual packages (or the
+# pr-flow bundle) by their virtual subdirectory path -- see README.
+dependencies:
+  apm:
+    - ./packages/shipyard-contracts
+    - ./packages/verify-runner
+    - ./packages/review-pr-gate
+    - ./packages/review-pr-merge
+  mcp: []
+scripts: {}

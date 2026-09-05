@@ -1,0 +1,17 @@
+name: review-pr-gate
+version: 0.1.0
+description: Review a pull request, gather evidence that it works, and post a machine-readable verdict comment saying whether it is safe to merge.
+author: philo-meerman
+license: MIT
+repository: https://github.com/philo-meerman/shipyard
+keywords: [sdlc, review, pull-request, github]
+targets:
+  - claude
+includes: auto
+dependencies:
+  apm:
+    - ../shipyard-contracts
+    - ../verify-runner
+    - mattpocock/skills/skills/engineering/code-review#v1.2.3
+  mcp: []
+scripts: {}

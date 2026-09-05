@@ -1,0 +1,15 @@
+name: shipyard-contracts
+version: 0.1.0
+description: Shared contracts for shipyard SDLC packages — the PR verdict schema and comment template read by both the review gate and the merge gate.
+author: philo-meerman
+license: MIT
+repository: https://github.com/philo-meerman/shipyard
+keywords: [sdlc, pull-request, contract, schema]
+type: skill
+targets:
+  - claude
+includes: auto
+dependencies:
+  apm: []
+  mcp: []
+scripts: {}
