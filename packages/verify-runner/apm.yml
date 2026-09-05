@@ -1,5 +1,5 @@
 name: verify-runner
-version: 0.1.0
+version: 0.2.0
 description: Evidence ladder for a change — dependency resolution, import/compile, app smoke boot, boundary behaviour diff — plus the repository's own test suite.
 author: philo-meerman
 license: MIT

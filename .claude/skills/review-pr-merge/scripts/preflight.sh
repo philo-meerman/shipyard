@@ -108,7 +108,7 @@ cr=$(gh api --paginate "repos/${REPO}/pulls/${PR}/reviews" \
 
 # --- Gate 8: repository policy --------------------------------------------------------
 cfg=".shipyard.yml"
-get_cfg() { [ -f "$cfg" ] && sed -n "s/^[[:space:]]*$1:[[:space:]]*//p" "$cfg" | head -1 | tr -d '"'"'"' ' || true; }
+get_cfg() { [ -f "$cfg" ] && sed -n "s/^[[:space:]]*$1:[[:space:]]*//p" "$cfg" | head -1 | sed 's/[[:space:]]*#.*//' | tr -d "\"' " || true; }
 auto_merge=$(get_cfg auto_merge); auto_merge="${auto_merge:-true}"
 behaviour_diff=$(get_cfg behaviour_diff); behaviour_diff="${behaviour_diff:-warn}"
 allowed=$(get_cfg auto_merge_update_types); allowed="${allowed:-[patch, minor]}"

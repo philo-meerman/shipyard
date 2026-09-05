@@ -83,6 +83,26 @@ and **any `follow_ups` from the verdict payload**. Follow-ups are things the mer
 do — regenerating a derived artefact, updating a lockfile elsewhere. Surfacing them at merge
 time is the last moment anyone will look.
 
+## Sync the local environment
+
+A merge leaves the local checkout behind the default branch, and if the pull request touched
+a dependency manifest, the installed packages now disagree with what the repository pins.
+That drift is silent: the next test run, debugging session and review all happen against
+something the repository no longer describes.
+
+So unless `.shipyard.yml` sets `post_merge.sync_local: false`, invoke the `maintain-env-sync`
+skill once the merge lands.
+
+Note the inversion this represents, and do not fight it. Before the merge, installing the
+pull request's dependency into the real environment is forbidden — the change is speculative
+and may never land, so the review gate uses an overlay. After the merge the default branch
+pins it, and an environment holding the old version is simply wrong. Same operation, opposite
+correct answer, decided by which side of the merge you are on.
+
+The sync refuses rather than surprises: it will not pull over uncommitted tracked changes,
+will not switch the user off a feature branch, and will not create a merge commit to make
+itself succeed. Relay any refusal as-is; it is doing its job.
+
 ## When a gate fails
 
 Say which gate, what was expected, what was found, and what would fix it. Then stop. Do not

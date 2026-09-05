@@ -1,0 +1,14 @@
+name: maintain-env-sync
+version: 0.2.0
+description: Bring the local checkout and its installed dependencies back in line with the repository's default branch, after a merge or any time the environment has drifted.
+author: philo-meerman
+license: MIT
+repository: https://github.com/philo-meerman/shipyard
+keywords: [sdlc, maintain, environment, dependencies, venv]
+targets:
+  - claude
+includes: auto
+dependencies:
+  apm: []
+  mcp: []
+scripts: {}

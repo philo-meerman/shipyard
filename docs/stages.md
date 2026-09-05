@@ -19,7 +19,7 @@ apm install philo-meerman/shipyard/packages/review-pr-gate#v0.1.0 --target claud
 | Review | `review-` | Is it safe to land? | **v0.1.0** |
 | Test | `test-`, `verify-` | Does it actually work? | **v0.1.0** |
 | Deploy | `deploy-` | Can it ship, and did it? | — |
-| Maintain | `maintain-` | Is it still healthy? | — |
+| Maintain | `maintain-` | Is it still healthy? | **v0.2.0** |
 
 Cross-stage packages carry the `shipyard-` prefix (e.g. `shipyard-contracts`) and hold
 schemas and conventions that more than one stage depends on.
@@ -34,6 +34,9 @@ schemas and conventions that more than one stage depends on.
   posts a verdict comment.
 - **`review-pr-merge`** — *review*. Re-verifies the verdict against live GitHub state and
   approves + merges. Ships a `PreToolUse` hook that blocks ungated merges.
+- **`maintain-env-sync`** — *maintain*. Fast-forwards the default branch and reinstalls what
+  the manifest diff says changed, so the local environment matches the repository. Called by
+  the merge gate; also usable on its own after any pull.
 - **`bundles/pr-flow`** — a manifest-only package depending on both gates, so a repo gets
   the whole PR flow in one install.
 

@@ -35,8 +35,13 @@ relevance against. If trust is not stated, **ask** — do not assume.
    nothing to do with the change.
 4. **Run** `test_command`, or the detected equivalent, with a timeout. Capture exit code,
    the last ~50 lines, and the summary line.
-5. **Judge relevance** if a changed boundary was named — see below.
-6. **Clean up** with `git worktree remove --force`, then confirm `git worktree list` is
+5. **Baseline any failures.** If the head run is not green, run the same suite at the merge
+   base and compare failing test IDs. Only tests that fail at head *and* pass at base are
+   this change's fault. Repositories carry stale failures; blocking a good pull request over
+   one is how the gate loses its credibility. Report pre-existing failures separately as
+   `pre_existing_failures` — visible, not blocking.
+6. **Judge relevance** if a changed boundary was named — see below.
+7. **Clean up** with `git worktree remove --force`, then confirm `git worktree list` is
    clean. Do this even when the run failed or you are aborting.
 
 ## Failed versus could not run
@@ -69,6 +74,8 @@ which test and which patch — a vague relevance claim is not actionable.
   "command": "pytest -q",
   "exit_code": 0,
   "summary": "12 passed in 3.41s",
+  "pre_existing_failures": [],
+  "new_failures": [],
   "tail": "...last lines, max 2000 chars...",
   "worktree_removed": true
 }

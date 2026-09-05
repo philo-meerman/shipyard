@@ -1,5 +1,5 @@
 name: review-pr-gate
-version: 0.1.0
+version: 0.2.0
 description: Review a pull request, gather evidence that it works, and post a machine-readable verdict comment saying whether it is safe to merge.
 author: philo-meerman
 license: MIT

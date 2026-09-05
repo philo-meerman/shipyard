@@ -39,6 +39,7 @@ automatically.
 | `verify-runner` | test | The evidence ladder, plus the repo's own suite. Useful standalone. |
 | `review-pr-gate` | review | Reviews a PR, gathers evidence, posts one verdict comment. |
 | `review-pr-merge` | review | Re-verifies the verdict live, then approves and merges. |
+| `maintain-env-sync` | maintain | Fast-forwards the default branch and reinstalls what changed. |
 | `bundles/pr-flow` | — | Manifest only; depends on both gates. |
 
 ## Using it
@@ -48,6 +49,8 @@ automatically.
 /review-pr 33 --dry-run  # render the comment, post nothing
 /merge-pr 33             # re-verify the eight gates, approve, merge
 /merge-pr 33 --dry-run   # report the gates, change nothing
+/sync-env                # match the local checkout and its packages to the default branch
+/sync-env --dry-run      # say what it would pull and install
 ```
 
 Both are also reachable by describing the intent — "have a look at PR 33 and tell me
@@ -92,6 +95,24 @@ A `PreToolUse` hook backstops all of it: a direct `gh pr merge` is blocked unles
 wrote a pass marker for that PR at that SHA within the last ten minutes. The marker lives in
 `.git/`, so it is per-clone and never committed.
 
+## After the merge: overlay in, real install out
+
+The review gate must never install a pull request's dependency into your environment — the
+change is speculative, and if the merge is declined you are left running something that was
+never accepted. So `verify-runner` uses a throwaway `PYTHONPATH` overlay.
+
+After the merge that inverts. The default branch pins the new version, and an environment
+still holding the old one is not cautious, it is wrong — every later test run and review
+happens against something the repository no longer describes.
+
+So `review-pr-merge` calls `maintain-env-sync` once a merge lands (unless
+`post_merge.sync_local: false`). It fast-forwards, installs **only what the manifest diff
+changed**, then asserts the interpreter actually imports the pinned version — `pip show`
+reports metadata, but the import is what your application will really get.
+
+It refuses rather than surprises: no pulling over uncommitted tracked changes, no switching
+you off a feature branch, no merge commit invented to make a sync succeed.
+
 ## Configuration
 
 Optional `.shipyard.yml` in the consuming repository:
@@ -121,6 +142,11 @@ boundary_probe: |
 dependency_policy:
   auto_merge_update_types: [patch, minor]   # major and unknown never auto-merge
   behaviour_diff: warn                      # warn | block
+
+post_merge:
+  sync_local: true                          # run maintain-env-sync after a merge
+  pull: ff-only
+  install: ./venv/bin/python -m pip install -r requirements.txt
 ```
 
 Without it, stacks are detected and the result says so, so a wrong guess looks like a guess.
