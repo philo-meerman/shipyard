@@ -35,6 +35,34 @@ are on. Do not carry the review gate's caution across that line.
 - **Pull would not fast-forward.** Use `--ff-only` and report; never create a merge commit
   or rewrite history to make a sync work.
 
+## Sync toward the manifest, not toward the diff
+
+A pull that changed a manifest is *one* reason to install. It is not the only one: a
+previous sync may have failed halfway, or someone may have installed something by hand.
+
+So the question the script actually asks is "does the environment match what the branch
+pins?", checked directly against the installed distributions — not "did the last pull touch
+a manifest?". Asking the narrower question means a failed sync reports "nothing to do" on
+the retry and the drift goes quiet, which is the opposite of the point.
+
+Compare versions **by value, not by spelling**: `1.81` and `1.81.0` are one version. A
+string comparison reports permanent false drift and triggers a pointless install on every
+run, which teaches the user to ignore the output.
+
+## When the manifest cannot be satisfied
+
+`No matching distribution found` against an old interpreter usually is not a broken
+install — it means the branch pins a version that dropped support for the Python the
+project runs on. Say that, name the interpreter version and the offending pin, and stop.
+
+Do not paper over it: do not install a "close enough" version, do not drop the package, and
+do not rebuild the environment on a newer Python. Which way to resolve it — move the
+project's Python forward, or pin the dependency back — is a judgement about the project
+that belongs to its maintainer.
+
+Report clearly that the branch was still fast-forwarded and the environment was left
+unchanged, so the user knows exactly what state they are in.
+
 ## Install only what changed
 
 Diff the manifests between the old and new HEAD. If no manifest changed, there is nothing

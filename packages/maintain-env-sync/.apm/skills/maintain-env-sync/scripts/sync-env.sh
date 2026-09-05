@@ -77,18 +77,70 @@ fi
 commits_pulled=0
 [ "$old_head" != "$new_head" ] && commits_pulled=$(git rev-list --count "${old_head}..${new_head}" 2>/dev/null || echo 0)
 
-if [ -z "${changed// /}" ]; then
-  jq -n --arg ob "${old_head:0:8}" --arg nb "${new_head:0:8}" --argjson n "$commits_pulled" \
-    '{synced: true, commits_pulled: $n, from: $ob, to: $nb, manifests_changed: [], installed: false, note: "no manifest changed; nothing to install"}'
-  exit 0
-fi
-
-# --- Install --------------------------------------------------------------------------
+# --- Resolve the interpreter early: the drift check needs it -------------------------
 py="${PY_CFG:-}"
 if [ -z "$py" ]; then
   for c in ./venv/bin/python ./.venv/bin/python ./env/bin/python; do
     [ -x "$c" ] && { py="$c"; break; }
   done
+fi
+
+# --- Does the environment actually match the manifest? -------------------------------
+# A pull that changed a manifest is one reason to install. It is not the only one: a
+# previous sync may have failed, or someone may have installed by hand. What matters is
+# whether the environment matches what the branch pins, so check that directly --
+# otherwise a failed sync reports "nothing to do" on the retry and the drift goes quiet.
+drift='[]'
+if [ -n "$py" ] && [ -f requirements.txt ]; then
+  drift=$($py - <<'PYD' 2>/dev/null || echo '[]'
+import json, re, pathlib
+from importlib import metadata
+
+def same(a, b):
+    """Compare versions by value, not by spelling: 1.81 and 1.81.0 are one version."""
+    if a is None or b is None:
+        return False
+    try:
+        from packaging.version import Version
+        return Version(a) == Version(b)
+    except Exception:  # pylint: disable=broad-exception-caught
+        norm = lambda v: tuple(
+            int(x) if x.isdigit() else x
+            for x in re.split(r"[._-]", v)
+        )
+        pa, pb = list(norm(a)), list(norm(b))
+        while len(pa) < len(pb):
+            pa.append(0)
+        while len(pb) < len(pa):
+            pb.append(0)
+        return pa == pb
+
+rows = []
+for line in pathlib.Path("requirements.txt").read_text().splitlines():
+    m = re.match(r"^\s*([A-Za-z0-9_.\-]+)\s*==\s*([^\s#;]+)", line)
+    if not m:
+        continue
+    name, pinned = m.group(1), m.group(2)
+    try:
+        actual = metadata.version(name)
+    except Exception:  # not installed at all
+        actual = None
+    if not same(actual, pinned):
+        rows.append({"package": name, "pinned": pinned, "installed": actual})
+print(json.dumps(rows))
+PYD
+)
+fi
+n_drift=$(jq 'length' <<<"$drift" 2>/dev/null || echo 0)
+
+if [ -z "${changed// /}" ] && [ "$n_drift" -eq 0 ]; then
+  jq -n --arg ob "${old_head:0:8}" --arg nb "${new_head:0:8}" --argjson n "$commits_pulled" \
+    '{synced: true, commits_pulled: $n, from: $ob, to: $nb, manifests_changed: [], installed: false, drift: [], note: "already in sync with the default branch"}'
+  exit 0
+fi
+
+if [ -z "${changed// /}" ]; then
+  changed="requirements.txt"
 fi
 
 install_cmd="$INSTALL_CFG"
@@ -105,13 +157,31 @@ fi
 
 if [ "$DRY_RUN" = true ]; then
   jq -n --arg ob "${old_head:0:8}" --arg nb "${new_head:0:8}" --argjson n "$commits_pulled" \
-        --arg ch "${changed% }" --arg ic "$install_cmd" \
-    '{dry_run: true, would_pull: $n, from: $ob, to: $nb, manifests_changed: ($ch|split(" ")), would_run: $ic}'
+        --arg ch "${changed% }" --arg ic "$install_cmd" --argjson dr "$drift" \
+    '{dry_run: true, would_pull: $n, from: $ob, to: $nb, manifests_changed: ($ch|split(" ")), drift: $dr, would_run: $ic}'
   exit 0
 fi
 
 install_log=$(mktemp)
 if ! eval "$install_cmd" >"$install_log" 2>&1; then
+  # Diagnose before dumping. "No matching distribution" against an interpreter this old
+  # almost always means the manifest pins a version that dropped support for it -- a
+  # different problem from a broken install, and one the user must decide how to fix.
+  unsat=$(grep -o 'No matching distribution found for [^ ]*' "$install_log" | head -1 | sed 's/.*for //')
+  if [ -n "$unsat" ]; then
+    pyver=$([ -n "$py" ] && $py -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2>/dev/null || echo "unknown")
+    pkg="${unsat%%==*}"
+    echo "sync-env: FAILED -- the default branch pins ${unsat}, which has no distribution installable on Python ${pyver}." >&2
+    echo "The branch was still fast-forwarded; the environment is unchanged." >&2
+    echo "This is a manifest/interpreter mismatch, not a broken install. Either the venv needs a newer Python, or ${pkg} needs pinning back to a version that supports ${pyver}." >&2
+    rm -f "$install_log"
+    jq -n --arg ob "${old_head:0:8}" --arg nb "${new_head:0:8}" --argjson n "$commits_pulled" \
+          --arg u "$unsat" --arg pv "$pyver" \
+      '{synced: true, commits_pulled: $n, from: $ob, to: $nb, installed: false,
+        failure: "unsatisfiable-requirement", requirement: $u, interpreter_python: $pv,
+        environment_changed: false, passed: false}'
+    exit 1
+  fi
   echo "sync-env: install failed" >&2; tail -20 "$install_log" >&2; rm -f "$install_log"; exit 1
 fi
 rm -f "$install_log"
@@ -122,6 +192,26 @@ if [ -n "$py" ] && [ -f requirements.txt ]; then
   verify=$($py - <<'PYV' 2>/dev/null || echo '[]'
 import json, re, pathlib
 from importlib import metadata
+
+def same(a, b):
+    """Compare versions by value, not by spelling: 1.81 and 1.81.0 are one version."""
+    if a is None or b is None:
+        return False
+    try:
+        from packaging.version import Version
+        return Version(a) == Version(b)
+    except Exception:  # pylint: disable=broad-exception-caught
+        norm = lambda v: tuple(
+            int(x) if x.isdigit() else x
+            for x in re.split(r"[._-]", v)
+        )
+        pa, pb = list(norm(a)), list(norm(b))
+        while len(pa) < len(pb):
+            pa.append(0)
+        while len(pb) < len(pa):
+            pb.append(0)
+        return pa == pb
+
 rows = []
 for line in pathlib.Path("requirements.txt").read_text().splitlines():
     m = re.match(r"^\s*([A-Za-z0-9_.\-]+)\s*==\s*([^\s#;]+)", line)
@@ -133,7 +223,7 @@ for line in pathlib.Path("requirements.txt").read_text().splitlines():
     except Exception:
         actual = None
     rows.append({"package": name, "pinned": pinned, "installed": actual,
-                 "match": actual == pinned})
+                 "match": same(actual, pinned)})
 print(json.dumps(rows))
 PYV
 )
