@@ -1,15 +1,11 @@
 lockfile_version: '1'
-generated_at: '2026-09-05T18:13:37.704985+00:00'
+generated_at: '2026-09-05T18:15:14.896459+00:00'
 apm_version: 0.29.0
 dependencies:
 - repo_url: _local/maintain-env-sync
   name: maintain-env-sync
   version: 0.2.0
   package_type: apm_package
-  deployed_files:
-  - .claude/commands/sync-env.md
-  deployed_file_hashes:
-    .claude/commands/sync-env.md: sha256:adafd8d6ab2a5f371b78bb95bc4f0e6fd48752fb2da1b6f9dc55ffe1ccf64809
   source: local
   local_path: ./packages/maintain-env-sync
   declared_license: MIT
@@ -42,15 +38,15 @@ dependencies:
   deployed_files:
   - .claude/commands/merge-pr.md
   - .claude/hooks/review-pr-merge/scripts/merge-guard.sh
-  - .claude/hooks/review-pr-merge/scripts/parse-merge-command.py
+  - .claude/hooks/review-pr-merge/scripts/parse_merge_command.py
   - .claude/skills/review-pr-merge
   - .claude/skills/review-pr-merge/SKILL.md
   - .claude/skills/review-pr-merge/references/preconditions.md
   - .claude/skills/review-pr-merge/scripts/preflight.sh
   deployed_file_hashes:
     .claude/commands/merge-pr.md: sha256:c23248d8450ff654c3a8bdf4c321a44c0b326cae6a2b01e097cd9e7cf864288d
-    .claude/hooks/review-pr-merge/scripts/merge-guard.sh: sha256:dc3c800666a423e34907435f3ff2356d785caebc731d76fbfd98db8e404f6855
-    .claude/hooks/review-pr-merge/scripts/parse-merge-command.py: sha256:f4628535556dea96db9b5ca8aaf24ed256ee9fb3a8bdd8d6baacd77ec8b0a423
+    .claude/hooks/review-pr-merge/scripts/merge-guard.sh: sha256:23256a618698173340fe024fffe4afbdb795eea5ac3bf8da2a92984cee388b85
+    .claude/hooks/review-pr-merge/scripts/parse_merge_command.py: sha256:a44f39410fb63aa6efbe0a388fc983227da46454d1c160fb16481a883d0143c2
     .claude/skills/review-pr-merge/SKILL.md: sha256:bbf2000b6d084816233ad0a549878459acfb831c9db08cbf684236d68bef80fe
     .claude/skills/review-pr-merge/references/preconditions.md: sha256:7ca47aa9194be9784ff605d3eef77f39c418fd5bbfaeedcc1b86a43ce5c5787d
     .claude/skills/review-pr-merge/scripts/preflight.sh: sha256:4c46987c28ea20b7efcf3d042c54da0dadf5413bfe640cd19dd92b57f0324867
@@ -78,11 +74,13 @@ dependencies:
   resolved_by: _local/review-pr-merge
   package_type: apm_package
   deployed_files:
+  - .claude/commands/sync-env.md
   - .claude/skills/maintain-env-sync
   - .claude/skills/maintain-env-sync/SKILL.md
   - .claude/skills/maintain-env-sync/references/sync-strategies.md
   - .claude/skills/maintain-env-sync/scripts/sync-env.sh
   deployed_file_hashes:
+    .claude/commands/sync-env.md: sha256:adafd8d6ab2a5f371b78bb95bc4f0e6fd48752fb2da1b6f9dc55ffe1ccf64809
     .claude/skills/maintain-env-sync/SKILL.md: sha256:0d44a785a24c2e74d8c74115680c9422015da63a32ed53b07eb23969b1635fb4
     .claude/skills/maintain-env-sync/references/sync-strategies.md: sha256:850fba22c1db6c64e6928590e606c658e957809b2f6782a9adde7e25ef900c3c
     .claude/skills/maintain-env-sync/scripts/sync-env.sh: sha256:2673455771199139793d99083eb86bc9ab931db10ae046fb9609b59c20e3b763
@@ -206,8 +204,8 @@ deployments:
   runtime: null
   scope: project
   owners:
-  - ./packages/maintain-env-sync
-  active_owner: ./packages/maintain-env-sync
+  - local:packages/maintain-env-sync
+  active_owner: local:packages/maintain-env-sync
   content_hash: sha256:adafd8d6ab2a5f371b78bb95bc4f0e6fd48752fb2da1b6f9dc55ffe1ccf64809
 - kind: project-relative
   target: claude
@@ -217,16 +215,16 @@ deployments:
   owners:
   - ./packages/review-pr-merge
   active_owner: ./packages/review-pr-merge
-  content_hash: sha256:dc3c800666a423e34907435f3ff2356d785caebc731d76fbfd98db8e404f6855
+  content_hash: sha256:23256a618698173340fe024fffe4afbdb795eea5ac3bf8da2a92984cee388b85
 - kind: project-relative
   target: claude
-  value: .claude/hooks/review-pr-merge/scripts/parse-merge-command.py
+  value: .claude/hooks/review-pr-merge/scripts/parse_merge_command.py
   runtime: null
   scope: project
   owners:
   - ./packages/review-pr-merge
   active_owner: ./packages/review-pr-merge
-  content_hash: sha256:f4628535556dea96db9b5ca8aaf24ed256ee9fb3a8bdd8d6baacd77ec8b0a423
+  content_hash: sha256:a44f39410fb63aa6efbe0a388fc983227da46454d1c160fb16481a883d0143c2
 - kind: project-relative
   target: claude
   value: .claude/skills/code-review

@@ -17,7 +17,7 @@ case "$payload" in
   *) exit 0 ;;
 esac
 
-decision=$(printf '%s' "$payload" | python3 "${HERE}/parse-merge-command.py" 2>/dev/null || echo "MERGE")
+decision=$(printf '%s' "$payload" | python3 "${HERE}/parse_merge_command.py" 2>/dev/null || echo "MERGE")
 
 case "$decision" in
   ALLOW) exit 0 ;;

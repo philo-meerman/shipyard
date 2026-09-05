@@ -26,9 +26,13 @@ PR_NUMBER = re.compile(r"\s(\d+)\b")
 
 
 def main() -> None:
+    """Read a PreToolUse payload on stdin and print the ALLOW/MERGE decision."""
     try:
         cmd = json.load(sys.stdin).get("tool_input", {}).get("command", "")
-    except Exception:
+    except Exception:  # pylint: disable=broad-exception-caught
+        # Deliberately broad: any failure to read the payload -- bad JSON, an
+        # unexpected shape, a truncated stream -- must fail closed. A merge we
+        # cannot inspect is one we do not wave through.
         print("MERGE")
         return
 
