@@ -52,6 +52,20 @@ A PR awaiting its first approval reports `mergeable_state: "blocked"`. That stat
 Checking `blocked` before approving and aborting on it kills exactly the PRs this gate
 exists to land. Do not collapse the two phases.
 
+## Run the mutating commands bare, one at a time
+
+`gh pr review --approve` and `gh pr merge` must each be issued as a **single, unchained
+command** — no `&&`, no pipes, no `echo` alongside them, no wrapping in a loop.
+
+Permission layers match allowlist rules against a command prefix. A compound line that
+bundles the merge with other statements does not match `Bash(gh pr merge:*)`, falls through
+to a classifier that judges the line as a whole, and gets refused — even in a repository
+where the rule is already granted. The refusal looks like a capability problem and is
+really a command-shape problem.
+
+Same reason you should not pipe them through `tail` to trim the output. Run the command,
+read what it prints, then run the next one.
+
 ## Approving
 
 `gh pr review --approve` — **unless the PR author is the authenticated user**. GitHub
